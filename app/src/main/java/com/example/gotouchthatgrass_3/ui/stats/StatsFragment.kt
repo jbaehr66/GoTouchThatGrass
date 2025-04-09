@@ -14,12 +14,12 @@ import kotlinx.coroutines.withContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.FragmentStatsBinding
 import com.example.gotouchthatgrass_3.models.Challenge
-import com.example.gotouchthatgrass_3.ui.theme.FontHelper
-import com.example.gotouchthatgrass_3.ui.theme.FontLoader
+import com.example.gotouchthatgrass_3.ui.stats.StatsFragmentHelper
 import com.example.gotouchthatgrass_3.util.PreferenceManager
 import java.io.File
 import java.text.SimpleDateFormat
@@ -55,8 +55,8 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         try {
-            // Load fonts asynchronously using FontHelper
-            FontHelper.applyFontsToStatsFragment(this, binding)
+            // Load fonts asynchronously using StatsFragmentHelper
+            StatsFragmentHelper.applyFonts(requireContext(), lifecycleScope, binding)
         } catch (e: Exception) {
             Log.e("StatsFragment", "Error loading fonts", e)
         }
@@ -158,15 +158,19 @@ class ChallengeHistoryAdapter : androidx.recyclerview.widget.ListAdapter<Challen
                     val statusTextView = itemView.findViewById<android.widget.TextView>(R.id.statusText)
                     val notesTextView = itemView.findViewById<android.widget.TextView>(R.id.notesText)
                     
-                    // Apply fonts to TextViews
+                    // Apply fonts to TextViews with improved error handling
+                    val poppinsMedium = R.font.poppins_medium
+                    val poppinsRegular = R.font.poppins_regular
+                    val poppinsLight = R.font.poppins_light
+                    
                     if (dateTextView != null) {
-                        FontLoader.loadFontAsync(lifecycleScope, context, dateTextView, R.font.poppins_medium)
+                        StatsFragmentHelper.safeApplyFont(context, lifecycleScope, dateTextView, poppinsMedium)
                     }
                     if (statusTextView != null) {
-                        FontLoader.loadFontAsync(lifecycleScope, context, statusTextView, R.font.poppins_regular)
+                        StatsFragmentHelper.safeApplyFont(context, lifecycleScope, statusTextView, poppinsRegular)
                     }
                     if (notesTextView != null) {
-                        FontLoader.loadFontAsync(lifecycleScope, context, notesTextView, R.font.poppins_light)
+                        StatsFragmentHelper.safeApplyFont(context, lifecycleScope, notesTextView, poppinsLight)
                     }
                 }
             } catch (e: Exception) {

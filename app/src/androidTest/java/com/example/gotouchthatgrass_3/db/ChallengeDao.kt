@@ -5,7 +5,6 @@ package com.example.gotouchthatgrass_3.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.gotouchthatgrass_3.models.Challenge
-import java.util.*
 
 @Dao
 interface ChallengeDao {

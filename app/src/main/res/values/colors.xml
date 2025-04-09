@@ -19,4 +19,5 @@
     <!-- Status colors - harmonious with the palette -->
     <color name="success_green">#7CB342</color> <!-- Matching primary for consistency -->
     <color name="failure_red">#E57373</color> <!-- Softer, muted red -->
+    <color name="gray">#9E9E9E</color> <!-- Medium gray for secondary text -->
 </resources>

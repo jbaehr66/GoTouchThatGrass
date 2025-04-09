@@ -29,6 +29,8 @@
     <string name="take_photo">Take Photo</string>
     <string name="confirm">Confirm</string>
     <string name="retry">Retry</string>
+    <string name="skip_for_now">Skip for now</string>
+    <string name="try_again_later">Try again later 🌱</string>
     <string name="take_photo_instruction">Take a photo of grass to unblock your apps</string>
     
     <!-- Settings Activity -->
@@ -57,6 +59,17 @@
     <string name="app_icon_description">App icon</string>
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
+    <string name="credits_available">Credits: %d</string>
+    <string name="credits_cost">%d credits</string>
+    <string name="blocked_time">Blocked %s</string>
+    <string name="insufficient_credits">Not enough credits</string>
+    <string name="blocked_apps_tab">Blocked</string>
+    <string name="available_apps_tab">Available</string>
+    <string name="unblock_costs_credits">Unblocking costs %d credits</string>
+    <string name="no_credits_message">You don\'t have any credits. Complete challenges to earn more!</string>
+    <string name="get_more_credits">Get More Credits</string>
+    <string name="filter_apps">Filter Apps</string>
+    <string name="all_categories">All Categories</string>
     
     <!-- Plurals for streak -->
     <plurals name="day_streak">
