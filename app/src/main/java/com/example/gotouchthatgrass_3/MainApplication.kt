@@ -1,12 +1,22 @@
 package com.example.gotouchthatgrass_3
 
 import android.app.Application
+import android.content.Context
+import android.graphics.Typeface
 import android.os.Build
 import android.os.StrictMode
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
-import com.example.gotouchthatgrass_3.ui.theme.FontLoader
+import androidx.fragment.app.FragmentActivity
+import com.example.gotouchthatgrass_3.ui.theme.FontCache
+import com.example.gotouchthatgrass_3.ui.theme.FontLayoutInflaterFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -35,8 +45,99 @@ class MainApplication : Application() {
         // Initialize EmojiCompat
         initializeEmojiCompat()
         
-        // Preload fonts asynchronously
-        FontLoader.preloadCommonFonts(this)
+        // Preload fonts asynchronously using the new FontCache
+        FontCache.preload(this, listOf(
+            R.font.poppins_medium,
+            R.font.poppins_light,
+            R.font.poppins_bold,
+            R.font.poppins_regular
+        ))
+        
+        // Set up the activity lifecycle callbacks to override fonts
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
+                Log.d("MainApplication", "Activity created: ${activity.javaClass.simpleName}")
+                // Nothing needed here as we override fonts directly in fragments
+            }
+            
+            override fun onActivityStarted(activity: android.app.Activity) {}
+            override fun onActivityResumed(activity: android.app.Activity) {}
+            override fun onActivityPaused(activity: android.app.Activity) {}
+            override fun onActivityStopped(activity: android.app.Activity) {}
+            override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
+            override fun onActivityDestroyed(activity: android.app.Activity) {}
+        })
+    }
+    
+    /**
+     * Utility function to safely apply fonts to views created from XML
+     * without causing StrictMode violations
+     */
+    companion object {
+        fun applyFontsSafely(context: Context, rootView: View) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    // Apply fonts on a background thread to avoid StrictMode violations
+                    val mediumFont = FontCache.getFont(context, R.font.poppins_medium)
+                    val regularFont = FontCache.getFont(context, R.font.poppins_regular)
+                    val lightFont = FontCache.getFont(context, R.font.poppins_light)
+                    val boldFont = FontCache.getFont(context, R.font.poppins_bold)
+                    
+                    rootView.post {
+                        try {
+                            // Apply fonts on the main thread after they've been loaded
+                            if (rootView is ViewGroup) {
+                                applyFontsToViewGroup(
+                                    rootView,
+                                    mediumFont,
+                                    regularFont,
+                                    lightFont,
+                                    boldFont
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Log.e("MainApplication", "Error applying fonts to view hierarchy", e)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("MainApplication", "Error loading fonts", e)
+                }
+            }
+        }
+        
+        private fun applyFontsToViewGroup(
+            viewGroup: ViewGroup,
+            mediumFont: Typeface?,
+            regularFont: Typeface?,
+            lightFont: Typeface?,
+            boldFont: Typeface?
+        ) {
+            val childCount = viewGroup.childCount
+            for (i in 0 until childCount) {
+                val child = viewGroup.getChildAt(i)
+                
+                when (child) {
+                    is TextView -> {
+                        when {
+                            child is Button -> mediumFont?.let { child.typeface = it }
+                            child.textSize >= 20f -> boldFont?.let { child.typeface = it }
+                            child.textSize >= 18f -> mediumFont?.let { child.typeface = it }
+                            child.textSize >= 16f -> regularFont?.let { child.typeface = it }
+                            else -> lightFont?.let { child.typeface = it }
+                        }
+                    }
+                    is ViewGroup -> {
+                        applyFontsToViewGroup(
+                            child,
+                            mediumFont,
+                            regularFont,
+                            lightFont,
+                            boldFont
+                        )
+                    }
+                }
+            }
+        }
     }
     
     private fun initializeEmojiCompat() {

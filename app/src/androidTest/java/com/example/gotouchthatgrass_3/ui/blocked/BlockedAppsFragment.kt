@@ -40,9 +40,9 @@ class BlockedAppsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Apply styles to UI elements
-        binding.blockedAppsTitle.setTextAppearance(R.style.TextAppearance_App_Headline)
-        binding.availableAppsTitle.setTextAppearance(R.style.TextAppearance_App_Headline)
-        binding.noBlockedAppsText.setTextAppearance(R.style.TextAppearance_App_Subtitle)
+//        binding.blockedAppsTitle.setTextAppearance(R.style.TextAppearance_App_Headline)
+//        binding.availableAppsTitle.setTextAppearance(R.style.TextAppearance_App_Headline)
+//        binding.noBlockedAppsText.setTextAppearance(R.style.TextAppearance_App_Subtitle)
         
         // Set up button style
         binding.btnUnblockAll.setBackgroundColor(resources.getColor(R.color.colorSecondary, null))

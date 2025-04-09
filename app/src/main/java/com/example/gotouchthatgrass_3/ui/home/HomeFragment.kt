@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import com.example.gotouchthatgrass_3.GrassDetectionActivity
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.FragmentHomeBinding
-import com.example.gotouchthatgrass_3.ui.theme.FontHelper
 import com.example.gotouchthatgrass_3.util.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,8 +41,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         try {
-            // Load fonts asynchronously using FontHelper
-            FontHelper.applyFontsToHomeFragment(this, binding)
+            // Load fonts asynchronously using HomeFragmentHelper
+            HomeFragmentHelper.applyFonts(requireContext(), lifecycleScope, binding)
         } catch (e: Exception) {
             Log.e("HomeFragment", "Error loading fonts", e)
         }

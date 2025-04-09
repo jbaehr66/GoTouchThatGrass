@@ -76,8 +76,15 @@ class GrassDetectionActivity : AppCompatActivity() {
             binding.previewImage.visibility = View.GONE
             binding.confirmButton.visibility = View.GONE
             binding.retryButton.visibility = View.GONE
+            binding.skipForNowText.visibility = View.GONE
             binding.viewFinder.visibility = View.VISIBLE
             binding.captureButton.visibility = View.VISIBLE
+        }
+        
+        // Initialize the Skip for Now button
+        binding.skipForNowText.setOnClickListener {
+            Log.d("GrassDetection", "User skipped grass check")
+            navigateToHome()
         }
     }
     
@@ -88,6 +95,7 @@ class GrassDetectionActivity : AppCompatActivity() {
             FontLoader.loadFontAsync(lifecycleScope, this, binding.captureButton, R.font.poppins_medium)
             FontLoader.loadFontAsync(lifecycleScope, this, binding.confirmButton, R.font.poppins_medium)
             FontLoader.loadFontAsync(lifecycleScope, this, binding.retryButton, R.font.poppins_medium)
+            FontLoader.loadFontAsync(lifecycleScope, this, binding.skipForNowText, R.font.poppins_light)
         } catch (e: Exception) {
             Log.e("GrassDetectionActivity", "Error loading fonts", e)
             // Continue without custom fonts if there's an error
@@ -199,6 +207,7 @@ class GrassDetectionActivity : AppCompatActivity() {
                     binding.previewImage.visibility = View.VISIBLE
                     binding.confirmButton.visibility = View.VISIBLE
                     binding.retryButton.visibility = View.VISIBLE
+                    binding.skipForNowText.visibility = View.VISIBLE
                 }
             } catch (e: Exception) {
                 Log.e("GrassDetection", "Error loading preview image", e)
@@ -467,6 +476,31 @@ class GrassDetectionActivity : AppCompatActivity() {
     private val outputDirectory by lazy {
         lifecycleScope.async(Dispatchers.IO) {
             getOutputDirectory()
+        }
+    }
+
+    /**
+     * Navigate back to the home screen
+     * Sets appropriate flags to clear the activity stack
+     */
+    private fun navigateToHome() {
+        // Show a snackbar message
+        val rootView = binding.root
+        com.google.android.material.snackbar.Snackbar.make(
+            rootView,
+            getString(R.string.try_again_later),
+            com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+        ).show()
+        
+        // Short delay to allow the Snackbar to be seen
+        lifecycleScope.launch {
+            delay(500)
+            
+            // Navigate to MainActivity
+            val intent = Intent(this@GrassDetectionActivity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
         }
     }
 

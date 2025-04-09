@@ -19,9 +19,8 @@
         <!-- Text colors -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">@color/dark_gray</item>
-        <!-- Default font family for the entire app -->
-        <item name="android:fontFamily">@font/poppins_regular</item>
-        <item name="fontFamily">@font/poppins_regular</item>
+        <!-- Default font family set programmatically in code -->
+        <!-- Fonts will be applied programmatically -->
         <!-- Text appearances -->
         <item name="textAppearanceHeadline1">@style/TextAppearance.App.Title</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.App.Headline</item>

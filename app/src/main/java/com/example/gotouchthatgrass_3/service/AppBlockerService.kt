@@ -17,7 +17,6 @@ import com.example.gotouchthatgrass_3.util.AppBlockManager
 import com.example.gotouchthatgrass_3.util.PreferenceManager
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.CoroutineContext
 
 class AppBlockerService : Service() {
 
