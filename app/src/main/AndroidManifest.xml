@@ -47,6 +47,12 @@
             android:exported="false"
             android:theme="@style/Theme.GoTouchThatGrass3" />
 
+        <!-- Onboarding Activity -->
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoTouchThatGrass3" />
+            
         <!-- Settings Activity -->
         <activity
             android:name=".SettingsActivity"

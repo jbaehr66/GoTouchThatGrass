@@ -76,6 +76,12 @@ class PreferenceManager(context: Context) {
         prefs.edit().putInt(KEY_STREAK, 0).apply()
     }
 
+    var isFirstLaunch: Boolean
+        get() = prefs.getBoolean(KEY_IS_FIRST_LAUNCH, true)
+        set(value) {
+            prefs.edit().putBoolean(KEY_IS_FIRST_LAUNCH, value).apply()
+        }
+
     companion object {
         private const val PREFS_NAME = "gotouchthatgrass_prefs"
         private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
@@ -83,5 +89,6 @@ class PreferenceManager(context: Context) {
         private const val KEY_LAST_CHALLENGE_TIMESTAMP = "last_challenge_timestamp"
         private const val KEY_STREAK = "streak"
         private const val KEY_NOTIFICATION_TIME = "notification_time"
+        private const val KEY_IS_FIRST_LAUNCH = "is_first_launch"
     }
 }

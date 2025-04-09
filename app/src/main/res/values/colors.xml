@@ -24,4 +24,9 @@
     <!-- Screen time status colors -->
     <color name="colorSuccess">#4CAF50</color> <!-- Green for positive trends -->
     <color name="colorWarning">#FFC107</color> <!-- Amber for warnings -->
+    
+    <!-- Onboarding colors -->
+    <color name="onboarding_yellow">#FFCC00</color> <!-- Bright yellow for first onboarding screen -->
+    <color name="onboarding_black">#FF000000</color> <!-- Pure black for second onboarding screen -->
+    <color name="onboarding_text_green">#00A651</color> <!-- Green for onboarding text -->
 </resources>
