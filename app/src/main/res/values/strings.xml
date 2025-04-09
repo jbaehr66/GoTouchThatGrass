@@ -80,6 +80,7 @@
     <!-- Navigation -->
     <string name="title_home">Home</string>
     <string name="title_stats">Statistics</string>
+    <string name="title_screen_time">Screen Time</string>
     <string name="title_blocked_apps">Blocked Apps</string>
     <string name="title_settings">Settings</string>
 </resources>

@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_stats, R.id.navigation_blocked_apps
+                R.id.navigation_home, R.id.navigation_screen_time, R.id.navigation_stats, R.id.navigation_blocked_apps
             )
         )
         // Explicitly specify the overload to resolve ambiguity

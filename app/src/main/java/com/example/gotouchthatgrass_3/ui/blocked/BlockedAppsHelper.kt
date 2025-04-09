@@ -21,7 +21,8 @@ import kotlinx.coroutines.withContext
 object BlockedAppsHelper {
     
     /**
-     * Apply fonts to all views in the BlockedAppsFragment using FontCache
+     * Apply fonts to all views in the main BlockedAppsFragment using FontCache
+     * This only applies to views in the main fragment layout, not the tab fragments
      */
     fun applyFonts(
         context: Context,
@@ -32,10 +33,14 @@ object BlockedAppsHelper {
             try {
                 // Map of views to their respective font resources
                 val fontMappings = HashMap<TextView, Int>().apply {
-                    put(binding.blockedAppsTitle, R.font.poppins_medium)
-                    put(binding.noBlockedAppsText, R.font.poppins_regular)
-                    put(binding.btnUnblockAll, R.font.poppins_medium)
-                    put(binding.availableAppsTitle, R.font.poppins_medium)
+                    // Only include views that exist in the main fragment layout
+                    put(binding.creditsTitle, R.font.poppins_medium)
+                    put(binding.btnGetMoreCredits, R.font.poppins_medium)
+                    // The following views are in tab fragments, not in the main fragment:
+                    // - blockedAppsTitle (in fragment_blocked_apps_tab.xml)
+                    // - noBlockedAppsText (in fragment_blocked_apps_tab.xml)
+                    // - btnUnblockAll (in fragment_blocked_apps_tab.xml)
+                    // - availableAppsTitle (in fragment_available_apps_tab.xml)
                 }
                 
                 // Apply each font with fallback

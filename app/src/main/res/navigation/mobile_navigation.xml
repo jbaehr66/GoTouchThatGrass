@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_screen_time"
+        android:name="com.example.gotouchthatgrass_3.ui.screentime.ScreenTimeFragment"
+        android:label="@string/title_screen_time"
+        tools:layout="@layout/fragment_screen_time" />
+
+    <fragment
         android:id="@+id/navigation_stats"
         android:name="com.example.gotouchthatgrass_3.ui.stats.StatsFragment"
         android:label="@string/title_stats"
