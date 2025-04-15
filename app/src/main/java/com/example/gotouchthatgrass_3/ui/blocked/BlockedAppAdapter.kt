@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.ItemBlockedAppBinding
+import com.example.gotouchthatgrass_3.models.BlockedAppItem
 import com.example.gotouchthatgrass_3.util.ClickUtils
 import java.util.concurrent.TimeUnit
 

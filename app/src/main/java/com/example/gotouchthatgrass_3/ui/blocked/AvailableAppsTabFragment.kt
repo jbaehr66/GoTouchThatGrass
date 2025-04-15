@@ -11,12 +11,15 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.FragmentAvailableAppsTabBinding
 import com.example.gotouchthatgrass_3.models.AppCategory
+import com.example.gotouchthatgrass_3.models.AppItem
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.launch
 
 /**
  * Fragment for the "Available Apps" tab that shows apps that can be blocked.
@@ -262,48 +265,72 @@ class AvailableAppsTabFragment : Fragment() {
      * Loads actual installed apps from the device
      */
     private fun loadInstalledApps() {
-        val packageManager = requireContext().packageManager
-        val allApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        Log.d("AvailableAppsTabFragment", "Found ${allApps.size} total apps")
-        
-        // Get non-system apps with launchers
-        val nonSystemApps = allApps.filter { app ->
-            val isSystem = (app.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-            val isOurApp = app.packageName == requireContext().packageName
-            val hasLauncher = packageManager.getLaunchIntentForPackage(app.packageName) != null
-            
-            !isSystem && !isOurApp && hasLauncher
-        }
-        
-        // Create app items with categories
-        val installedApps = nonSystemApps.map { app ->
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val label = packageManager.getApplicationLabel(app)
-                val icon = packageManager.getApplicationIcon(app.packageName)
+                val packageManager = requireContext().packageManager
+                val allApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                Log.d("AvailableAppsTabFragment", "Found ${allApps.size} total apps")
                 
-                // Determine app category
-                val category = AppCategory.categorizeApp(app.packageName, label.toString())
+                // Get non-system apps with launchers
+                val nonSystemApps = allApps.filter { app ->
+                    try {
+                        val isSystem = (app.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                        val isOurApp = app.packageName == requireContext().packageName
+                        val hasLauncher = packageManager.getLaunchIntentForPackage(app.packageName) != null
+                        
+                        !isSystem && !isOurApp && hasLauncher
+                    } catch (e: Exception) {
+                        Log.e("AvailableAppsTabFragment", "Error filtering app ${app.packageName}", e)
+                        false
+                    }
+                }
                 
-                AppItem(
-                    packageName = app.packageName,
-                    label = label,
-                    icon = icon,
-                    category = category
-                )
+                Log.d("AvailableAppsTabFragment", "Found ${nonSystemApps.size} non-system apps with launchers")
+                
+                // Create app items with categories
+                val installedApps = nonSystemApps.mapNotNull { app ->
+                    try {
+                        val label = packageManager.getApplicationLabel(app) ?: app.packageName
+                        val icon = try {
+                            packageManager.getApplicationIcon(app.packageName)
+                        } catch (e: Exception) {
+                            resources.getDrawable(R.drawable.ic_notification, null)
+                        }
+                        
+                        // Determine app category
+                        val category = AppCategory.categorizeApp(app.packageName, label.toString())
+                        
+                        // Check if app is already blocked - now we can directly call the suspend function
+                        // since we're inside a coroutine scope
+                        val isBlocked = viewModel.isAppBlocked(app.packageName)
+                        if (!isBlocked) {
+                            AppItem(
+                                packageName = app.packageName,
+                                label = label,
+                                icon = icon,
+                                category = category
+                            )
+                        } else {
+                            null // Skip already blocked apps
+                        }
+                    } catch (e: Exception) {
+                        Log.e("AvailableAppsTabFragment", "Error loading app info for ${app.packageName}", e)
+                        null
+                    }
+                }.sortedBy { it.label.toString().lowercase() }
+                
+                Log.d("AvailableAppsTabFragment", "Final list contains ${installedApps.size} apps")
+                
+                if (installedApps.isEmpty()) {
+                    Log.w("AvailableAppsTabFragment", "No real apps found, falling back to sample data")
+                    loadSampleApps()
+                } else {
+                    appAdapter.submitList(installedApps)
+                }
             } catch (e: Exception) {
-                Log.e("AvailableAppsTabFragment", "Error loading app info for ${app.packageName}", e)
-                null
+                Log.e("AvailableAppsTabFragment", "Error loading installed apps", e)
+                loadSampleApps()
             }
-        }.filterNotNull()
-            .sortedBy { it.label.toString().lowercase() }
-        
-        Log.d("AvailableAppsTabFragment", "Final list contains ${installedApps.size} apps")
-        
-        if (installedApps.isEmpty()) {
-            Log.w("AvailableAppsTabFragment", "No real apps found, falling back to sample data")
-            loadSampleApps()
-        } else {
-            appAdapter.submitList(installedApps)
         }
     }
     

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.ItemAppBinding
+import com.example.gotouchthatgrass_3.models.AppItem
 import com.example.gotouchthatgrass_3.util.ClickUtils
 
 class AppListAdapter(private val onBlockClick: (AppItem) -> Unit) :

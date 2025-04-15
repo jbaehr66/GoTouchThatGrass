@@ -45,15 +45,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Initialize preference manager early to check first launch status
+        // Initialize preference manager early
         preferenceManager = PreferenceManager(this)
         
-        // Check if this is the first launch and redirect to onboarding if needed
+        // Set first launch to false to skip onboarding
         if (preferenceManager.isFirstLaunch) {
-            val intent = Intent(this, OnboardingActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
+            preferenceManager.isFirstLaunch = false
         }
         
         // Check for previous crashes

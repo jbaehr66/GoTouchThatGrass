@@ -165,4 +165,23 @@ class BlockedAppsViewModel(application: Application) : AndroidViewModel(applicat
             false
         }
     }
+    
+    /**
+     * Gets a list of all currently blocked app package names
+     * This is useful for filtering available apps
+     * 
+     * @return List of package names that are currently blocked
+     */
+    suspend fun getBlockedPackageNames(): List<String> = withContext(Dispatchers.IO) {
+        try {
+            val allBlockedApps = blockedAppDao.getAllBlockedApps().value ?: emptyList()
+            val currentlyBlocked = allBlockedApps.filter { it.isCurrentlyBlocked }
+            val packageNames = currentlyBlocked.map { it.packageName }
+            Log.d("BlockedAppsViewModel", "Got ${packageNames.size} blocked package names")
+            packageNames
+        } catch (e: Exception) {
+            Log.e("BlockedAppsViewModel", "Error getting blocked package names", e)
+            emptyList()
+        }
+    }
 }

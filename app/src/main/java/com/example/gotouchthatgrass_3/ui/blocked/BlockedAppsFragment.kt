@@ -19,6 +19,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gotouchthatgrass_3.R
 import com.example.gotouchthatgrass_3.databinding.FragmentBlockedAppsBinding
 import com.example.gotouchthatgrass_3.MainApplication
+import com.example.gotouchthatgrass_3.models.AppItem
+import com.example.gotouchthatgrass_3.models.BlockedAppItem
 import com.example.gotouchthatgrass_3.service.AppBlockerService
 import com.example.gotouchthatgrass_3.ui.theme.FontCache
 import com.example.gotouchthatgrass_3.util.ClickUtils
@@ -422,29 +424,6 @@ class BlockedAppsFragment : Fragment() {
                 else -> throw IllegalArgumentException("Invalid tab position: $position")
             }
         }
-    }
-}
-
-// Helper classes for the adapters
-data class AppItem(
-    val packageName: String,
-    val label: CharSequence,
-    val icon: android.graphics.drawable.Drawable,
-    val category: com.example.gotouchthatgrass_3.models.AppCategory = com.example.gotouchthatgrass_3.models.AppCategory.OTHER
-) {
-    override fun toString(): String {
-        return label.toString()
-    }
-}
-
-data class BlockedAppItem(
-    val packageName: String,
-    val appName: String,
-    val icon: android.graphics.drawable.Drawable,
-    val blockTime: Long = System.currentTimeMillis() // timestamp when the app was blocked
-) {
-    override fun toString(): String {
-        return appName
     }
 }
 
